@@ -75,7 +75,7 @@ const PlanProgressDashboard: React.FC<PlanProgressDashboardProps> = ({ onNavigat
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center mb-2">
-        <h1 className="text-xl font-bold text-slate-900 tracking-wide">计划进度情况</h1>
+        <h1 className="text-xl font-bold text-slate-900 tracking-wide">计划进度管理</h1>
         <div className="flex items-center gap-2 text-slate-400">
           <span className="text-[10px]">系统管理员 ID: 4022-X9</span>
           <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] border border-slate-200 text-slate-600 font-bold">AD</div>

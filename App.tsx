@@ -20,6 +20,9 @@ import {
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState('execution');
   const [subTab, setSubTab] = useState<string | null>(null);
+  
+  // State to track confirmation status
+  const [isHRConfirmed, setIsHRConfirmed] = useState(false);
 
   const handleDetailedAnalysis = () => {
     setActiveTab('annual-plan');
@@ -215,9 +218,27 @@ const App: React.FC = () => {
               <div className="w-1.5 h-4 bg-cyan-500 rounded-full"></div>
               <h1 className="text-xl font-bold text-slate-900">飞行员分析</h1>
             </div>
-            <span className="bg-orange-50 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded border border-orange-100 flex items-center gap-1">
-              <Clock size={12} /> 待确认
-            </span>
+            
+            {/* Status and Confirm Button */}
+            <div className="flex items-center gap-3">
+              {isHRConfirmed ? (
+                <span className="bg-emerald-50 text-emerald-600 text-[10px] font-bold px-2 py-1 rounded border border-emerald-100 flex items-center gap-1 shadow-sm">
+                  <CheckCircle2 size={12} /> 已确认
+                </span>
+              ) : (
+                <>
+                  <span className="bg-orange-50 text-orange-600 text-[10px] font-bold px-2 py-1 rounded border border-orange-100 flex items-center gap-1 shadow-sm">
+                    <Clock size={12} /> 待确认
+                  </span>
+                  <button 
+                    onClick={() => setIsHRConfirmed(true)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg text-xs font-bold transition-all shadow-md shadow-blue-500/10 flex items-center gap-1.5 active:scale-95"
+                  >
+                    <CheckCircle2 size={14} /> 确认
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
@@ -258,36 +279,35 @@ const App: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-center text-[11px] border-collapse min-w-[1200px]">
               <thead>
-                <tr className="bg-[#fff9db] font-bold text-slate-900 border-b border-slate-300">
-                  <th className="py-3 px-4 border-r border-slate-300 bg-[#fff9db] sticky left-0 z-10 shadow-[1px_0_0_0_#cbd5e1]">月份</th>
+                {/* Removed Yellow Header Color bg-[#fff9db] -> bg-slate-50 */}
+                <tr className="bg-slate-50 font-bold text-slate-900 border-b border-slate-300">
+                  <th className="py-3 px-4 border-r border-slate-300 bg-slate-50 sticky left-0 z-10 shadow-[1px_0_0_0_#cbd5e1]">月份</th>
                   {monthsShort.map(m => <th key={m} className="py-3 px-4 border-r border-slate-300">{m}</th>)}
                 </tr>
               </thead>
               <tbody className="font-bold text-slate-800">
                 <tr className="border-b border-slate-200">
-                  <td className="py-2.5 px-4 bg-[#fff9db] border-r border-slate-300 sticky left-0 z-10 shadow-[1px_0_0_0_#cbd5e1]">月天数</td>
+                  <td className="py-2.5 px-4 bg-white border-r border-slate-300 sticky left-0 z-10 shadow-[1px_0_0_0_#cbd5e1]">月天数</td>
                   {[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31].map((v, i) => <td key={i} className="py-2.5 px-4 border-r border-slate-300">{v}</td>)}
                 </tr>
-                {/* Crew Utilization moved below Monthly Days */}
                 <tr className="border-b border-slate-200">
-                  <td className="py-2.5 px-4 bg-[#fff9db] border-r border-slate-300 sticky left-0 z-10 shadow-[1px_0_0_0_#cbd5e1]">机组利用率</td>
+                  <td className="py-2.5 px-4 bg-white border-r border-slate-300 sticky left-0 z-10 shadow-[1px_0_0_0_#cbd5e1]">机组利用率</td>
                   {[11.34, 12.70, 11.57, 11.61, 11.48, 12.82, 13.72, 13.91, 12.30, 12.03, 10.51, 10.98].map((v, i) => <td key={i} className="py-2.5 px-4 border-r border-slate-300">{v}</td>)}
                 </tr>
                 <tr className="border-b border-slate-200">
-                  <td className="py-2.5 px-4 bg-[#fff9db] border-r border-slate-300 sticky left-0 z-10 shadow-[1px_0_0_0_#cbd5e1]">机长理论月均飞行小时</td>
+                  <td className="py-2.5 px-4 bg-white border-r border-slate-300 sticky left-0 z-10 shadow-[1px_0_0_0_#cbd5e1]">机长理论月均飞行小时</td>
                   {[84.94, 76.72, 84.94, 79.5, 82.15, 79.5, 82.15, 82.15, 79.5, 82.15, 82.2, 84.94].map((v, i) => <td key={i} className="py-2.5 px-4 border-r border-slate-300">{v}</td>)}
                 </tr>
                 <tr className="border-b border-slate-200">
-                  <td className="py-2.5 px-4 bg-[#fff9db] border-r border-slate-300 sticky left-0 z-10 shadow-[1px_0_0_0_#cbd5e1]">副驾驶月均飞行小时</td>
+                  <td className="py-2.5 px-4 bg-white border-r border-slate-300 sticky left-0 z-10 shadow-[1px_0_0_0_#cbd5e1]">副驾驶月均飞行小时</td>
                   {[84.94, 79.46, 84.94, 79.5, 82.15, 79.5, 82.15, 82.15, 79.5, 82.15, 82.2, 84.94].map((v, i) => <td key={i} className="py-2.5 px-4 border-r border-slate-300">{v}</td>)}
                 </tr>
-                {/* Background color removed for this row */}
                 <tr className="border-b border-slate-300 bg-white">
-                  <td className="py-2.5 px-4 font-black border-r border-slate-300 sticky left-0 z-10 shadow-[1px_0_0_0_#cbd5e1]">机组总保障小时</td>
+                  <td className="py-2.5 px-4 font-black bg-white border-r border-slate-300 sticky left-0 z-10 shadow-[1px_0_0_0_#cbd5e1]">机组总保障小时</td>
                   {[5273.4, 5334.2, 5380.3, 5225.8, 5338.7, 5769.1, 6377.5, 6467.6, 5533.2, 5593.6, 4729.2, 5103.5].map((v, i) => <td key={i} className="py-2.5 px-4 border-r border-slate-300">{v}</td>)}
                 </tr>
-                <tr className="border-b border-slate-300 bg-[#f8d7da]">
-                  <td className="py-2.5 px-4 bg-[#f8d7da] border-r border-slate-400 sticky left-0 z-10 shadow-[1px_0_0_0_#fecaca]">市场计划小时</td>
+                <tr className="border-b border-slate-300 bg-white">
+                  <td className="py-2.5 px-4 bg-white border-r border-slate-400 sticky left-0 z-10 shadow-[1px_0_0_0_#e2e8f0]">市场计划小时</td>
                   {[5127, 5190, 5268, 5065, 5257, 5729, 6314, 6335, 5373, 5365, 4623, 4770].map((v, i) => <td key={i} className="py-2.5 px-4 border-r border-slate-400">{v}</td>)}
                 </tr>
                 <tr className="bg-white">
@@ -363,7 +383,7 @@ const App: React.FC = () => {
               <span>调度中心</span>
               <span className="text-slate-300">/</span>
               <span className="text-slate-900 font-bold">
-                {activeTab === 'annual-plan' ? '计划进度情况' : 
+                {activeTab === 'annual-plan' ? '计划进度管理' : 
                  activeTab === 'execution' ? '运行监控' : '计划评估管理'}
                 {subTab && <span className="text-slate-400 ml-1 font-normal">/ {subTab === 'marketing-analysis' ? '营销收益分析' : '飞行员分析'}</span>}
               </span>

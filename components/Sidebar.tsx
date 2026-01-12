@@ -17,7 +17,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
   const menuItems = [
     { id: 'execution', label: '运行监控', icon: Activity },
     { id: 'evaluation', label: '计划评估管理', icon: FileSearch },
-    { id: 'annual-plan', label: '计划进度情况', icon: CalendarRange },
+    { id: 'annual-plan', label: '计划进度管理', icon: CalendarRange },
   ];
 
   return (
