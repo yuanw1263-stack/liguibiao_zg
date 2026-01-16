@@ -1,11 +1,19 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   CalendarRange, 
-  Activity, 
-  Settings, 
   FileSearch,
-  Plane
+  Plane,
+  Settings,
+  Home,
+  ChevronDown,
+  ChevronRight,
+  BarChart4,
+  TableProperties,
+  ClipboardList,
+  FileSpreadsheet,
+  Fuel,
+  TrendingUp
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -14,11 +22,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
-  const menuItems = [
-    { id: 'execution', label: '运行监控', icon: Activity },
-    { id: 'evaluation', label: '计划评估管理', icon: FileSearch },
-    { id: 'annual-plan', label: '计划进度管理', icon: CalendarRange },
-  ];
+  const [isAnalysisOpen, setIsAnalysisOpen] = useState(true);
 
   return (
     <div className="w-64 bg-[#0b1426] flex flex-col h-full overflow-y-auto">
@@ -35,23 +39,78 @@ const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
       <div className="px-2 py-4 flex-1">
         <p className="text-[10px] font-bold text-slate-500 px-4 mb-4 uppercase tracking-wider">业务流程</p>
         <nav className="space-y-1">
-          {menuItems.map((item) => (
+          {/* 首页 */}
+          <button
+            onClick={() => setActiveTab('execution')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 group relative ${
+              activeTab === 'execution' 
+                ? 'bg-blue-600/10 text-blue-400' 
+                : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+            }`}
+          >
+            <Home size={18} className={activeTab === 'execution' ? 'text-blue-400' : 'group-hover:text-white'} />
+            <span className="font-medium text-sm">首页</span>
+          </button>
+
+          {/* 公司计划 - 现在作为直接点击项，隐藏二级菜单计划进度管理 */}
+          <div className="space-y-1">
             <button
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 group relative ${
-                activeTab === item.id 
+              onClick={() => setActiveTab('evaluation-list')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 group ${
+                activeTab === 'evaluation-list'
                   ? 'bg-blue-600/10 text-blue-400' 
                   : 'text-slate-400 hover:bg-slate-800 hover:text-white'
               }`}
             >
-              <item.icon size={18} className={activeTab === item.id ? 'text-blue-400' : 'group-hover:text-white'} />
-              <span className="font-medium text-sm">{item.label}</span>
-              {activeTab === item.id && (
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-500 rounded-l-full shadow-[0_0_8px_rgba(59,130,246,0.5)]"></div>
-              )}
+              <FileSearch size={18} className={activeTab === 'evaluation-list' ? 'text-blue-400' : 'group-hover:text-white'} />
+              <span className="font-medium text-sm">公司计划</span>
             </button>
-          ))}
+          </div>
+
+          {/* 公司计划分析 - 一级菜单 */}
+          <div className="space-y-1">
+            <button
+              onClick={() => setIsAnalysisOpen(!isAnalysisOpen)}
+              className={`w-full flex items-center justify-between px-4 py-3 rounded transition-all duration-200 group ${
+                activeTab.startsWith('report-') 
+                  ? 'bg-blue-600/10 text-blue-400' 
+                  : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <BarChart4 size={18} className={activeTab.startsWith('report-') ? 'text-blue-400' : 'group-hover:text-white'} />
+                <span className="font-medium text-sm">公司计划分析</span>
+              </div>
+              {isAnalysisOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+            </button>
+
+            {/* 二级菜单列表 */}
+            {isAnalysisOpen && (
+              <div className="pl-9 pr-2 space-y-0.5">
+                {[
+                  { id: 'report-prod-stats', label: '生产统计表', icon: TableProperties },
+                  { id: 'report-trans-stats', label: '运输生产统计表', icon: TrendingUp },
+                  { id: 'report-manifest', label: '舱单信息管理', icon: ClipboardList },
+                  { id: 'report-yy', label: 'YY报表', icon: FileSpreadsheet },
+                  { id: 'report-yt', label: 'YT报表', icon: FileSpreadsheet },
+                  { id: 'report-carbon', label: '碳排放统计', icon: Fuel },
+                ].map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={`w-full flex items-center gap-3 px-4 py-2.5 rounded transition-all duration-200 group ${
+                      activeTab === item.id 
+                        ? 'text-blue-400 font-bold bg-blue-400/5' 
+                        : 'text-slate-500 hover:text-white hover:bg-slate-800/50'
+                    }`}
+                  >
+                    <item.icon size={15} />
+                    <span className="font-medium text-[12px]">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </nav>
       </div>
 

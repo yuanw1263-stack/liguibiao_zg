@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { CheckCircle2, AlertCircle, Clock } from 'lucide-react';
+import { CheckCircle2, AlertCircle, Clock, MousePointerClick } from 'lucide-react';
 import CircleProgress from './CircleProgress';
 
 interface PlanProgressDashboardProps {
@@ -9,10 +9,10 @@ interface PlanProgressDashboardProps {
 
 const PlanProgressDashboard: React.FC<PlanProgressDashboardProps> = ({ onNavigateSub }) => {
   const metrics = [
+    { label: '预计营收 (亿元)', value: '312.4', target: '330.0', trend: '-5.3%', trendColor: 'text-red-500', barColor: 'bg-indigo-500' },
+    { label: '预计成本 (亿元)', value: '180.5', target: '175.0', trend: '+3.1%', trendColor: 'text-red-500', barColor: 'bg-pink-500' },
     { label: '飞机利用率 (Hrs)', value: '10.42', target: '11.5', trend: '-9%', trendColor: 'text-red-500', barColor: 'bg-cyan-500' },
     { label: '日均起降 (架次)', value: '65.70', target: '71.0', trend: '+5%', trendColor: 'text-emerald-500', barColor: 'bg-emerald-500' },
-    { label: '客公里收入 (RMB)', value: '0.51', target: '0.60', trend: '-14%', trendColor: 'text-orange-500', barColor: 'bg-orange-400' },
-    { label: '日均营收 (万元)', value: '250,000', target: '30.0', trend: '-16%', trendColor: 'text-red-500', barColor: 'bg-red-500' },
   ];
 
   const milestones = [
@@ -48,12 +48,12 @@ const PlanProgressDashboard: React.FC<PlanProgressDashboardProps> = ({ onNavigat
       { name: '体检计划', status: 'done' },
       { name: '公务计划', status: 'done' },
     ]},
-    { name: '运行支持', id: 'ops', status: 'active', tasks: [
+    { name: '运行分析', id: 'ops', status: 'active', tasks: [ // Renamed from 运行支持
       { name: '新航线', status: 'done' },
       { name: '地服评估', status: 'done' },
       { name: '行政评估', status: 'done' },
     ]},
-    { name: '初始训练', id: 'training', status: 'pending', tasks: [
+    { name: '训练管控', id: 'training', status: 'pending', tasks: [
       { name: '训练评估', status: 'pending' },
       { name: '资源准备', status: 'pending' },
     ]},
@@ -124,7 +124,6 @@ const PlanProgressDashboard: React.FC<PlanProgressDashboardProps> = ({ onNavigat
             <div className="w-1 h-3 bg-indigo-500 rounded-full"></div>
             <h3 className="text-sm font-bold text-slate-800">关键事项进度监控</h3>
           </div>
-          <span className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">全链路并行推进</span>
         </div>
 
         <div className="relative">
@@ -140,14 +139,23 @@ const PlanProgressDashboard: React.FC<PlanProgressDashboardProps> = ({ onNavigat
                 </div>
                 <button 
                   onClick={() => {
-                    if (m.id === 'marketing' && onNavigateSub) onNavigateSub('marketing-analysis');
-                    if (m.id === 'pilot' && onNavigateSub) onNavigateSub('hr-assessment');
+                    if (m.id === 'marketing' && onNavigateSub) onNavigateSub('network-planning');
+                    if (m.id === 'pilot' && onNavigateSub) onNavigateSub('pilot-analysis');
+                    // Add logic for others as needed
                   }}
-                  className={`text-[11px] font-bold mb-4 transition-all hover:scale-105 active:scale-95 px-2 py-0.5 rounded cursor-pointer whitespace-nowrap ${
-                    m.status === 'active' ? 'text-cyan-600 bg-cyan-50 hover:bg-cyan-100' : 'text-slate-400 bg-slate-50'
+                  className={`group relative flex flex-col items-center text-[11px] font-bold mb-4 transition-all hover:scale-105 active:scale-95 px-2 py-0.5 rounded cursor-pointer whitespace-nowrap ${
+                    m.status === 'active' ? 'text-cyan-600 bg-cyan-50 hover:bg-cyan-100' : 'text-slate-400 bg-slate-50 cursor-default'
                   }`}
                 >
-                  {m.name}
+                  <div className="flex items-center gap-1">
+                    {m.name}
+                    {m.status === 'active' && <MousePointerClick size={10} className="animate-pulse" />}
+                  </div>
+                  {m.status === 'active' && (
+                    <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[8px] bg-slate-800 text-white px-1 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                      点击查看
+                    </span>
+                  )}
                 </button>
                 <div className="space-y-1.5 w-full">
                   {m.tasks.map((t, tidx) => (
